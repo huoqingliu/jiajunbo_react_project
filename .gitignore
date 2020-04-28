@@ -4,6 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
+react总结.md
 
 # testing
 /coverage

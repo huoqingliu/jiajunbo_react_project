@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
-import { Button, DatePicker, version } from 'antd';
+import {Switch,Route,Redirect} from 'react-router-dom'
+import Login from "./page/login/login";
+import Admin from "./page/Admin/admin";
 
 export default class App extends Component {
   render() {
     return (
-      <div>
-        <h1>antd version: {version}</h1>
-        <DatePicker />
-        <Button type="primary" style={{ marginLeft: 8 }}>
-          Primary Button
-        </Button>
-      </div>
+      <Switch>
+        <Route path='/Admin' component={Admin} />
+        <Route path='/login' component={Login} />
+        <Redirect to='login'/>
+      </Switch>
     )
   }
 }
