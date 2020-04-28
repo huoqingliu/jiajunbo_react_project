@@ -21,7 +21,7 @@ axios.interceptors.request.use((config) => {
 axios.interceptors.response.use(response => {
   const { msg,status } = response.data
   // console.log(response.data);
-  if (status == 0) {
+  if (status === 0) {
     // 请求成功,正常返回response.data
     return response.data;
   } else {
