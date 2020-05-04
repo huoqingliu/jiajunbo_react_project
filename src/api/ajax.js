@@ -1,15 +1,21 @@
 import axios from "axios";
 import qs from "querystring";
-import { message} from 'antd'
+import { message } from 'antd'
+// 制作进度条
+import nprogress from "nprogress";
+// 引入进度条样式
+import "nprogress/nprogress.css";
+
 // 使用antd的message 组件
 
-axios.defaults.baseURL = 'http://localhost:3000'
+axios.defaults.baseURL = '/api'
 
 axios.defaults.timeout = 2000
 
 
 // 请求拦截器
 axios.interceptors.request.use((config) => {
+  nprogress.start()
   const { method, data } = config
   if (method.toLocaleLowerCase()==='post'&& data instanceof Object) {
     config.data=qs.stringify(data)
@@ -19,6 +25,7 @@ axios.interceptors.request.use((config) => {
 
 // 响应拦截器
 axios.interceptors.response.use(response => {
+  nprogress.done()
   const { msg,status } = response.data
   // console.log(response.data);
   if (status === 0) {

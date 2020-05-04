@@ -1,20 +1,31 @@
 import React, { Component } from 'react'
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button,message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { reqLogin } from "../../api/index";
+import { connect } from 'react-redux'
+import { Redirect } from "react-router-dom";
 
+
+import { saveUserInfo } from "../../redux/actions/login";
 import "./css/login.less";
 import Logo from "./img/logo.png";
 
 
 const {Item} =Form
 // Form.Item简写为：Item
-export default class Login extends Component {
+ class Login extends Component {
   // 表单验证成功后才触发onFinish
   onFinish = async values => {
     // console.log('Received values of form: ', values);
     const result = await reqLogin(values)
     console.log(result);
+    const {status,data,msg} = result
+    if (status === 0) {
+      this.props.saveUserInfo(data)
+      //向redux和localStorage中保存用户信息
+    } else {
+      message.error(msg)
+    }
     
   };
 
@@ -40,7 +51,8 @@ export default class Login extends Component {
       return Promise.reject(errArr)
     }
   }
-  render() {
+   render() {
+    if(this.props.isLogin) return <Redirect to='/admin'/>
     return (
       <div className='login'>
         <header>
@@ -113,3 +125,10 @@ export default class Login extends Component {
     )
   }
 }
+
+export default connect(
+  state => ({
+    isLogin:state.userInfo.isLogin
+  }),
+  {saveUserInfo}
+)(Login)
