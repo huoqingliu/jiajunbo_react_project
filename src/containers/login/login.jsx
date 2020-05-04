@@ -18,10 +18,11 @@ const {Item} =Form
   onFinish = async values => {
     // console.log('Received values of form: ', values);
     const result = await reqLogin(values)
-    console.log(result);
+    // console.log(result);
     const {status,data,msg} = result
     if (status === 0) {
       this.props.saveUserInfo(data)
+      message.success('登录成功',1)
       //向redux和localStorage中保存用户信息
     } else {
       message.error(msg)
@@ -128,7 +129,8 @@ const {Item} =Form
 
 export default connect(
   state => ({
-    isLogin:state.userInfo.isLogin
+    isLogin: state.userInfo.isLogin
+    
   }),
   {saveUserInfo}
 )(Login)

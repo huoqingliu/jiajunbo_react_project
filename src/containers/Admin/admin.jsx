@@ -1,35 +1,31 @@
 import React, { Component } from 'react'
-import { Button } from "antd";
-import screenfull from "screenfull";
-import { deleteUserInfo } from "../../redux/actions/login";
+import { Layout } from "antd";
+import { connect } from 'react-redux'
+import { Redirect } from "react-router-dom";
+import Header from './Header/Header'
+import './css/admin.less'
 
-export default class Admin extends Component {
-  state = {
-    isFull: false
-  }
-  fullScreen = () => {
-    const { isFull } = this.state;
-    this.setState({ "isFull": !isFull })
-    screenfull.toggle();
-  }
+const {Footer, Sider, Content} =Layout
 
-  componentDidMount() {
-    screenfull.onchange(() => {
-      const { isFull } = this.state;
-      this.setState({ "isFull": !isFull })
-    })
-  }
-
-  
+class Admin extends Component {
   render() {
+    if(!this.props.isLogin) return <Redirect to="/login"/>
     return (
-      <div>
-        123
-        {this.state.isFull}?<Button size={"small"} onClick={this.fullScreen}>23</Button>:<Button size={"small"} onClick={this.fullScreen}>12</Button>
-        
-
-
-      </div>
+      <Layout className="admin-container">
+        <Sider>Sider</Sider>
+        <Layout>
+          <Header/>
+          <Content>Content</Content>
+          <Footer>Footer</Footer>
+        </Layout>
+      </Layout>
     )
   }
 }
+
+export default connect(
+	state =>({ //映射状态
+		isLogin:state.userInfo.isLogin
+	}),
+	{} //映射操作状态的方法
+)(Admin)

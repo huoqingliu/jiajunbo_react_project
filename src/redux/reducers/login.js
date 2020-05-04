@@ -4,10 +4,13 @@ let _user
 
 // 获取user和token的数据,并验证user是否有错误
 try {
-  _user = JSON.paese(localStorage.getItem('user'));
+  _user = JSON.parse(localStorage.getItem('user'));
+  
 } catch (error) {
   // 获取localstorage数据出错,使_user=null
   _user = null  //代表要储存一个对象,但是现在为null
+
+
 }
 
 let _token = localStorage.getItem('token')
