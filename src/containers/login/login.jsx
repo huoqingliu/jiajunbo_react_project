@@ -3,16 +3,26 @@ import { Form, Input, Button,message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { reqLogin } from "../../api/index";
 import { connect } from 'react-redux'
-import { Redirect } from "react-router-dom";
+// import { Redirect } from "react-router-dom";
 
 
 import { saveUserInfo } from "../../redux/actions/login";
 import "./css/login.less";
-import Logo from "./img/logo.png";
+import Logo from "../../assets/img/logo.png";
+import Check from "../hoc/Check";
 
 
 const {Item} =Form
 // Form.Item简写为：Item
+
+
+@connect(
+  state => ({
+    isLogin: state.userInfo.isLogin
+  }),
+  {saveUserInfo}
+)
+@Check
  class Login extends Component {
   // 表单验证成功后才触发onFinish
   onFinish = async values => {
@@ -52,8 +62,10 @@ const {Item} =Form
       return Promise.reject(errArr)
     }
   }
-   render() {
-    if(this.props.isLogin) return <Redirect to='/admin'/>
+  render() {
+     console.log(this.props);
+     
+    // if(this.props.isLogin) return <Redirect to='/admin'/>
     return (
       <div className='login'>
         <header>
@@ -127,10 +139,12 @@ const {Item} =Form
   }
 }
 
-export default connect(
-  state => ({
-    isLogin: state.userInfo.isLogin
+export default Login
+
+// export default connect(
+//   state => ({
+//     isLogin: state.userInfo.isLogin
     
-  }),
-  {saveUserInfo}
-)(Login)
+//   }),
+//   {saveUserInfo}
+// )(Login)

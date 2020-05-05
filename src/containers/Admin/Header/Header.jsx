@@ -6,17 +6,29 @@ import {
 	ExclamationCircleOutlined
 } from '@ant-design/icons';
 import screenfull from 'screenfull'
-import {connect} from 'react-redux'
-import {deleteUserInfo} from '@/redux/actions/login'
+import { connect } from 'react-redux'
+import dayjs from "dayjs";
+import { deleteUserInfo } from '@/redux/actions/login'
 import demo from './demo.jpg'
 import './css/header.less'
+import { reqWeatherData } from "../../../api/index";
+
 
 const { confirm } = Modal;
 
+
+@connect(
+	state => ({
+		user: state.userInfo.user
+	}),//映射状态
+	{deleteUserInfo}//映射操作状态的方法
+)
 class Header extends Component {
 
 	state = {
-		isFull:false //标识是否全屏
+		isFull:false, //标识是否全屏
+		time: dayjs().format('YYYY年MM月DD日 hh:mm:ss'),
+		weather:{}
 	}
 
 	//退出登录
@@ -37,6 +49,9 @@ class Header extends Component {
 	fullScreen  = ()=>{
 		screenfull.toggle(); //切换全屏
 	}
+	getWeather = async() => {
+		// let result = await reqWeatherData()	
+	}
 
 	componentDidMount(){
 		//检测屏幕的变化
@@ -44,14 +59,23 @@ class Header extends Component {
 			const {isFull} = this.state
 			this.setState({isFull:!isFull})
 		})
+		this.time = setInterval(() => {
+			this.setState({time:dayjs().format('YYYY年MM月DD日 hh:mm:ss')})
+		}, 1000);
+
+		this.getWeather();
+	}
+	componentWillUnmount() {
+		clearInterval(this.time);
 	}
 
 	render() {
+		const {isFull,time} = this.state
 		return (
 			<div className="header">
 				<div className="header-top">
 					<Button size="small" onClick={this.fullScreen}>
-						{this.state.isFull ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
+						{isFull ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
 					</Button>
 					<span className="username">欢迎,{this.props.user.username}</span>
 					<Button type="link" size="small" onClick={this.logout}>退出登录</Button>
@@ -61,7 +85,7 @@ class Header extends Component {
 						<span>首页</span>
 					</div>
 					<div className="bottom-right">
-						<span>2020年5月4日 00:00:00</span>
+						<span>{time}</span>
 						<img src={demo} alt=""/>
 						<span>多云转晴</span>
 						<span>温度：0~15℃</span>
@@ -72,9 +96,11 @@ class Header extends Component {
 	}
 }
 
-export default connect(
-	state => ({
-		user: state.userInfo.user
-	}),//映射状态
-	{deleteUserInfo}//映射操作状态的方法
-)(Header)
+export default Header
+
+// export default connect(
+// 	state => ({
+// 		user: state.userInfo.user
+// 	}),//映射状态
+// 	{deleteUserInfo}//映射操作状态的方法
+// )(Header)
