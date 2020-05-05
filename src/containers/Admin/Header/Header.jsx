@@ -28,7 +28,7 @@ class Header extends Component {
 	state = {
 		isFull:false, //标识是否全屏
 		time: dayjs().format('YYYY年MM月DD日 hh:mm:ss'),
-		weather:{}
+		weatherData:{}
 	}
 
 	//退出登录
@@ -50,7 +50,9 @@ class Header extends Component {
 		screenfull.toggle(); //切换全屏
 	}
 	getWeather = async() => {
-		// let result = await reqWeatherData()	
+		let result = await reqWeatherData()	
+		const {dayPictureUrl,weather,temperature} = result
+		this.setState({weatherData:{dayPictureUrl,weather,temperature}})
 	}
 
 	componentDidMount(){
@@ -63,14 +65,15 @@ class Header extends Component {
 			this.setState({time:dayjs().format('YYYY年MM月DD日 hh:mm:ss')})
 		}, 1000);
 
-		this.getWeather();
+		// this.getWeather();
 	}
 	componentWillUnmount() {
 		clearInterval(this.time);
 	}
 
 	render() {
-		const {isFull,time} = this.state
+		const { isFull, time,weatherData } = this.state
+		const{ dayPictureUrl, weather, temperature} =weatherData
 		return (
 			<div className="header">
 				<div className="header-top">
@@ -86,9 +89,12 @@ class Header extends Component {
 					</div>
 					<div className="bottom-right">
 						<span>{time}</span>
-						<img src={demo} alt=""/>
-						<span>多云转晴</span>
+						<img src={demo} alt="天气图片"/>
+						<span>多云转晴 </span>
 						<span>温度：0~15℃</span>
+						{/* <img src={dayPictureUrl} alt="天气图片"/>
+						<span>{weather}</span>
+						<span>温度：{temperature}</span> */}
 					</div>
 				</div>
 			</div>
