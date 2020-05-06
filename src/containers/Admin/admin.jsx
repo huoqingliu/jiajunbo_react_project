@@ -20,7 +20,8 @@ const {Footer, Sider, Content} =Layout
 
 @connect(
 	state =>({ //映射状态
-		isLogin:state.userInfo.isLogin
+		isLogin: state.userInfo.isLogin,
+
 	}),
 	{} //映射操作状态的方法
 )

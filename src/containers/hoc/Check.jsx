@@ -14,11 +14,11 @@ export default function name(ReciveComponent) {
       const { pathname } = this.props.location
       
       
-      console.log(this.props);
-      console.log(isLogin,pathname);
+      // console.log(this.props);
+      // console.log(isLogin,pathname);
  
       
-      if (isLogin&&pathname==="/login") return <Redirect to='/admin' />
+      if (isLogin&&pathname==="/login") return <Redirect to='/admin/home' />
       if (!isLogin&&pathname!=="/login") return <Redirect to='/login' />
       return <ReciveComponent {...this.props} />
     }

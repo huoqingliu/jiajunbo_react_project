@@ -32,10 +32,10 @@ axios.interceptors.request.use((config) => {
 axios.interceptors.response.use(
   response => {
     nprogress.done()
-    const {
-      msg,
-      status
-    } = response.data
+    // const {
+    //   msg,
+    //   status
+    // } = response.data
     // console.log(response.data);
     // if (status === 0) {
     //   // 请求成功,正常返回response.data

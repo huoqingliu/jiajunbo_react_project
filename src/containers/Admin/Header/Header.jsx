@@ -19,7 +19,8 @@ const { confirm } = Modal;
 
 @connect(
 	state => ({
-		user: state.userInfo.user
+		user: state.userInfo.user,
+		title:state.title
 	}),//映射状态
 	{deleteUserInfo}//映射操作状态的方法
 )
@@ -28,7 +29,7 @@ class Header extends Component {
 	state = {
 		isFull:false, //标识是否全屏
 		time: dayjs().format('YYYY年MM月DD日 hh:mm:ss'),
-		weatherData:{}
+		weatherData: {}
 	}
 
 	//退出登录
@@ -66,14 +67,17 @@ class Header extends Component {
 		}, 1000);
 
 		// this.getWeather();
+		
 	}
 	componentWillUnmount() {
 		clearInterval(this.time);
 	}
 
 	render() {
-		const { isFull, time,weatherData } = this.state
-		const{ dayPictureUrl, weather, temperature} =weatherData
+		const { isFull, time } = this.state
+		// const { weatherData }=this.state
+		// const { dayPictureUrl, weather, temperature } = weatherData
+		
 		return (
 			<div className="header">
 				<div className="header-top">
@@ -85,7 +89,7 @@ class Header extends Component {
 				</div>
 				<div className="header-bottom">
 					<div className="bottom-left">
-						<span>首页</span>
+						<span>{this.props.title}</span>
 					</div>
 					<div className="bottom-right">
 						<span>{time}</span>
