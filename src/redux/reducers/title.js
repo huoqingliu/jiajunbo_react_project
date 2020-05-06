@@ -1,8 +1,8 @@
 import { SAVE_TITLE,DELETE_USERINFO } from "../action_types";
 
 
-let _title = JSON.parse(localStorage.getItem('title'))|| "首页"
-// let _title =""
+// let _title = JSON.parse(localStorage.getItem('title'))|| "首页"
+let _title =""
 
 export default function (preState=_title, action) {
   const { type, data } = action
@@ -11,9 +11,6 @@ export default function (preState=_title, action) {
     case SAVE_TITLE:
       newState = data
       return newState
-    // case DELETE_USERINFO:
-    //   newState = ''
-    //   return newState
     default:
       return preState
   }

@@ -5,18 +5,18 @@ import { Link,withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import menu from "@/config/menu_config";
 import "./leftNav.less";
-import { save_title } from "@/redux/actions/title";
+import { saveTitle } from "@/redux/actions/title";
 
 const { SubMenu, Item } = Menu;
 
 @connect(
 	()=>({}),//映射状态
-	{save_title}//映射操作状态的方法
+	{saveTitle}//映射操作状态的方法
 )
 @withRouter
  class leftNav extends Component {
   saveTitle = (title) => {
-    this.props.save_title(title)
+    this.props.saveTitle(title)
     // console.log('saveTitle成功');
   }
 
@@ -39,6 +39,39 @@ const { SubMenu, Item } = Menu;
         )
       }
     })
+  }
+
+  calculateTitle = () => {
+    // 从当前路径中获取当前的key
+    const { pathname } = this.props.location
+    // console.log(pathname);
+    const currentKey = pathname.split('/').slice(-1)[0]
+    // console.log(currentKey);
+
+    // 如果当前key为admin，则修改为home
+    if (currentKey === 'admin') currentKey = 'home'
+    
+    let title = ''
+    // 在menu中根据当前key查找当前的title
+    menu.forEach((menuObj) => {
+      if (menuObj.children instanceof Array) {
+        let result = menuObj.children.find((children) => {
+          return children.key === currentKey
+        })
+        if(result) title = result.title
+      } else {
+        if (menuObj.key ===currentKey) {
+          title = menuObj.title
+        }
+      }
+    })
+
+    // 存储当前的title
+    this.props.saveTitle(title)
+    
+  }
+  componentWillMount() {
+    this.calculateTitle()
   }
   render() {
     const {pathname} = this.props.location //获取路径，无论是展开还是选中，都是从路径中获取的。
