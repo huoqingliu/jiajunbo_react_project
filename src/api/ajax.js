@@ -3,6 +3,7 @@ import qs from "querystring";
 import {
   message as Msg
 } from 'antd'
+import store from "@/redux/store";
 // 制作进度条
 import nprogress from "nprogress";
 // 引入进度条样式
@@ -18,13 +19,17 @@ axios.defaults.timeout = 2000
 // 请求拦截器
 axios.interceptors.request.use((config) => {
   nprogress.start()
-  const {
-    method,
-    data
-  } = config
+  const { method, data } = config
+  //统一处理post请求json编码问题（转为urlencoded）
   if (method.toLocaleLowerCase() === 'post' && data instanceof Object) {
     config.data = qs.stringify(data)
   }
+
+  //如果存在token，那就携带token
+	const {token} = store.getState().userInfo
+	if(token){
+		config.headers.Authorization = 'atguigu_'+token
+	}
   return config
 })
 

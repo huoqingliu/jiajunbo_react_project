@@ -45,7 +45,7 @@ const { SubMenu, Item } = Menu;
     // 从当前路径中获取当前的key
     const { pathname } = this.props.location
     // console.log(pathname);
-    const currentKey = pathname.split('/').slice(-1)[0]
+    let currentKey = pathname.split('/').slice(-1)[0]
     // console.log(currentKey);
 
     // 如果当前key为admin，则修改为home

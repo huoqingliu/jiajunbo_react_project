@@ -22,3 +22,8 @@ export const reqWeatherData = () => {
 		})
 	})
 }
+
+export const reqGoodsList = (pageNum,pageSize) => ajax.get('/manage/product/list',{params:{pageNum,pageSize}})
+
+
+export const reqSeacrch = (searchType,keyWord,pageNum,pageSize) => ajax.get('/manage/product/search',{params:{ [searchType]:keyWord,pageNum,pageSize}})
