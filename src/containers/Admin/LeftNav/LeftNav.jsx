@@ -75,8 +75,14 @@ const { SubMenu, Item } = Menu;
   }
   render() {
     const {pathname} = this.props.location //获取路径，无论是展开还是选中，都是从路径中获取的。
-		const openedkey = pathname.split('/') //要展开的菜单
-		const checkedKey = openedkey.slice(-1) //要选中的菜单
+    const openedkey = pathname.split('/') //要展开的菜单
+    
+    let checkedKey = openedkey.slice(-1) //要选中的菜单
+    if (openedkey.indexOf('product')!==-1) {
+      checkedKey = ['product']
+    }
+    // console.log(checkedKey);
+    
     return (
       <div className='leftNav'>
         <div className='navTop'>

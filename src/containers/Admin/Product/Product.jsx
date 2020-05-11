@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Card, Table, Input, Button,Select,message} from "antd";
 import { PlusCircleOutlined,SearchOutlined } from '@ant-design/icons';
-import { reqGoodsList ,reqSeacrch} from "@/api/index";
+import { reqGoodsList ,reqSeacrch,reqUpdateGoodsStatus} from "@/api/index";
 import { PAGE_SIZE } from "@/config";
 
 
@@ -12,7 +12,8 @@ export default class Product extends Component {
 		total:0,//数据总数
 		pageNum:0,//当前是第几页
 		searchType:'productName',//搜索方式(默认值是按名称搜)
-		keyWord:''//搜索的关键字
+		keyWord: '',//搜索的关键字
+		isLoding: true
 	}
 
 	getGoodsList = async (pageNumber = 1) => {
@@ -33,6 +34,24 @@ export default class Product extends Component {
 		} else {
 			message.error(msg)
 		}
+		this.setState({isLoding:false})
+	}
+
+	changeStatus = async (_id, currentStatus) => {
+		if (currentStatus===1) currentStatus=2
+		else currentStatus=1
+		
+		let result = await reqUpdateGoodsStatus(_id, currentStatus)
+		
+		if (result.status ===0) {
+			message.success(currentStatus === 1 ? '上架成功' : '下架成功')
+			this.getGoodsList(this.state.pageNum)
+		} else {
+			message.warning(result.msg)
+		}
+		// console.log(this.state.GoodsList);
+		// console.log(_id, currentStatus);
+		
 		
 	}
 	componentWillMount() {
@@ -61,13 +80,14 @@ export default class Product extends Component {
 			},
 			{
 				title: '状态',
-				dataIndex: 'status',
+				// dataIndex: 'status',
 				key: 'status',
 				align:'center',
-				render:(status)=>{
+				render: (productObj) => {
+					const {_id,status} = productObj
 					return (
 						<div>
-							<Button type={status === 1 ? 'danger' : 'primary'}>
+							<Button type={status === 1 ? 'danger' : 'primary'} onClick={()=>this.changeStatus(_id,status)}>
 									{status === 1 ? '下架' : '上架'}
 							</Button><br/>
 							<span>{status === 1 ? '在售' : '售罄'}</span>
@@ -77,13 +97,15 @@ export default class Product extends Component {
 			},
 			{
 				title: '操作',
-				//dataIndex: 'action',
+				dataIndex: '_id',
 				key: 'action',
 				align:'center',
-				render:()=> (
+				render:(id)=> (
 					<div>
-						<Button type="link">详情</Button><br/>
-						<Button type="link">修改</Button>
+							
+						<Button type="link" onClick={()=>{this.props.history.push(`/admin/prod_about/product/detail/${id}`)}} >详情</Button><br/>
+							
+						<Button type="link" onClick={()=>{this.props.history.push(`/admin/prod_about/product/updata/${id}`)}}>修改</Button>
 					</div>
 				)
 			},
@@ -102,6 +124,7 @@ export default class Product extends Component {
 						<Input 
 							onChange= {event => this.setState({keyWord:event.target.value})}
 							placeholder="搜索商品"
+							allowClear
 							style={{ width: "30%"}}
 						/>
 						<Button
@@ -117,7 +140,9 @@ export default class Product extends Component {
 				}
 
 				extra={
-					<Button type="primary">
+					<Button type="primary" onClick={()=>{
+						this.props.history.push('/admin/prod_about/product/add')
+					}}>
 						<PlusCircleOutlined />
 						添加
     			</Button>
@@ -128,6 +153,7 @@ export default class Product extends Component {
 					dataSource={GoodsList}//表格的数据源
 					bordered //边框
 					rowKey="_id" //指定唯一值对应项
+					loading={this.state.isLoding}
 					pagination={{
 						total: this.state.total,//数据总数
 						pageSize: PAGE_SIZE,//每页多大

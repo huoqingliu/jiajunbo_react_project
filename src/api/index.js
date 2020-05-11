@@ -23,7 +23,17 @@ export const reqWeatherData = () => {
 	})
 }
 
+
+// 请求商品列表
 export const reqGoodsList = (pageNum,pageSize) => ajax.get('/manage/product/list',{params:{pageNum,pageSize}})
 
 
+// 请求搜索商品
 export const reqSeacrch = (searchType,keyWord,pageNum,pageSize) => ajax.get('/manage/product/search',{params:{ [searchType]:keyWord,pageNum,pageSize}})
+
+
+// 请求商品上架下架
+export const reqUpdateGoodsStatus = (productId,status) => ajax.post('/manage/product/updateStatus',{productId,status})
+
+//根据商品ID获取商品
+export const reqCurrentProduct = (productId)=>ajax.get('/manage/product/info',{params:{productId}})
